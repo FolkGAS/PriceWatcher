@@ -12,6 +12,8 @@
         <spring.version>4.3.6.RELEASE</spring.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <org.slf4j.version>1.7.22</org.slf4j.version>
+        <apache.commons.version>3.5</apache.commons.version>
+        <google.guava.version>21.0</google.guava.version>
     </properties>
 
     <dependencies>
@@ -156,6 +158,28 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>6.0.5</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
 
     </dependencies>
 
