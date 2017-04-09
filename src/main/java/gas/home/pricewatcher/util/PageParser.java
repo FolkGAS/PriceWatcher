@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,23 +16,72 @@ public class PageParser {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0";
     private static final int TIMEOUT = 10 * 10000;
 
+    public static class ElementEntry implements Serializable {
+        private String tag;
+        private String classs;
+
+
+        public ElementEntry(String tagName, String className) {
+            this.tag = tagName;
+            this.classs = className;
+        }
+
+        @Override
+        public String toString() {
+            return "ElementEntry{" +
+                    "tag='" + tag + '\'' +
+                    ", classs='" + classs + '\'' +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ElementEntry that = (ElementEntry) o;
+
+            return (tag != null ? tag.equals(that.tag) : that.tag == null) && (classs != null ? classs.equals(that.classs) : that.classs == null);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = tag != null ? tag.hashCode() : 0;
+            result = 31 * result + (classs != null ? classs.hashCode() : 0);
+            return result;
+        }
+    }
+
+
     public static Element getElementFromChain(Document doc, Goods goods) {
 
         Element element = doc;
         List<Integer> elementIndexes = goods.getCostElementIndexes();
-        for (Integer elementIndexe : elementIndexes) {
-            element = element.child(elementIndexe);
+        for (Integer elementIndex : elementIndexes) {
+            element = element.child(elementIndex);
         }
         return element != doc ? element : null;
     }
 
     public static List<Integer> getElementsChainIndexes(Document doc, String text) {
-
         Optional<Element> optional = getElementEqualText(doc, text);
-        return optional.map(element -> getSiblingIndexes(doc, element)).orElse(Collections.emptyList());
+        return optional.map(PageParser::getSiblingIndexes).orElse(Collections.emptyList());
     }
 
-    private static List<Integer> getSiblingIndexes(Document doc, Element element) {
+    public static List<ElementEntry> getElementsChainTagsClasses(Document doc, String text) {
+        Optional<Element> optional = getElementEqualText(doc, text);
+        List<ElementEntry> elementEntryList = optional.isPresent() ? optional.get().parents().stream()
+                .map(element -> new ElementEntry(element.tagName(), element.className()))
+                .collect(Collectors.toList()) : Collections.emptyList();
+        Collections.reverse(elementEntryList);
+        if (optional.isPresent() && elementEntryList.size() > 0) {
+            Element element = optional.get();
+            elementEntryList.add(new ElementEntry(element.tagName(), element.className()));
+        }
+        return elementEntryList;
+    }
+
+    private static List<Integer> getSiblingIndexes(Element element) {
         List<Integer> siblingIndexes = element.parents().stream().map(Element::elementSiblingIndex).collect(Collectors.toList());
         Collections.reverse(siblingIndexes);
         siblingIndexes.add(element.elementSiblingIndex());
@@ -40,7 +90,7 @@ public class PageParser {
 
     private static Document getDocument(String url) throws IOException {
 //        return Jsoup.connect(url).userAgent(USER_AGENT).referrer(REFERRER).get();
-        return Jsoup.connect(url).userAgent(USER_AGENT).timeout(TIMEOUT).get();
+        return Jsoup.connect(url).userAgent(USER_AGENT).ignoreHttpErrors(true).timeout(TIMEOUT).get();
     }
 
     private static Optional<Element> getElementEqualText(Document doc, String text) {
@@ -53,6 +103,7 @@ public class PageParser {
     private static Optional<Element> getElementByClass(Document doc, String htmlClass) {
         return doc.getElementsByClass(htmlClass).stream().findFirst();
     }
+
 
     public static void temp(Goods goods) {
 
@@ -69,6 +120,18 @@ public class PageParser {
             Element costElement = getElementFromChain(doc, goods);
 
             System.out.println(costElement == null ? "NOT FOUND" : costElement.text());
+
+            List<ElementEntry> elementsChainTagsClasses = getElementsChainTagsClasses(doc, cost);
+
+            String fileName = goods.getName() + "-" + goods.getDescription() + ".txt";
+
+            FileListConverter.saveToFile("tag", fileName , elementsChainTagsClasses);
+
+            FileListConverter.saveToFile("index", fileName, costIndexes);
+
+            FileListConverter.loadFromFile("tag", fileName).forEach(System.out::println);
+
+            FileListConverter.loadFromFile("index", fileName).forEach(System.out::println);
 
         } catch (IOException e) {
             e.printStackTrace();

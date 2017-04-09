@@ -1,10 +1,10 @@
-*.class
-
 *.war
 *.jar
 *.ear
+*.patch
 out/
 src/test/
 target/
 .idea/
-classes/
+tag/
+index/

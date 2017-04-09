@@ -1,5 +1,7 @@
 package gas.home.pricewatcher.model;
 
+import gas.home.pricewatcher.util.PageParser;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,16 +21,54 @@ public class Goods extends NamedEntity {
 
     private List<Integer> costElementIndexes;
 
-    public Goods(String name, String description, String url, String itemNameFromSite, String cost) {
-        this(null, null, name, description, url, itemNameFromSite ,cost);
-    }
+    private List<PageParser.ElementEntry> costElementTagsAndClasses;
 
-    public Goods(Integer id, Integer userId, String name, String description, String url, String itemNameFromSite, String cost) {
+    public Goods(Integer id,
+                 Integer userId,
+                 String name,
+                 String description,
+                 String url,
+                 String itemNameFromSite,
+                 String cost,
+                 List<Integer> costElementIndexes,
+                 List<PageParser.ElementEntry> costElementTagsAndClasses) {
         super(id, name);
+        this.userId = userId;
         this.description = description;
         this.url = url;
+        this.itemNameFromSite = itemNameFromSite;
         this.cost = cost;
+        this.costElementIndexes = costElementIndexes;
+        this.costElementTagsAndClasses = costElementTagsAndClasses;
+    }
+
+    public Goods(String name,
+                 String description,
+                 String url,
+                 String itemNameFromSite,
+                 String cost) {
+        this(null, null, name, description, url, itemNameFromSite, cost, null, null);
+    }
+
+    public Goods(String name,
+                 String description,
+                 String url,
+                 String itemNameFromSite,
+                 String cost,
+                 List<Integer> costElementIndexes,
+                 List<PageParser.ElementEntry> costElementTagsAndClasses) {
+        this(null, null, name, description, url, itemNameFromSite, cost, costElementIndexes, costElementTagsAndClasses);
+    }
+
+    public Goods(Integer id, String name, Integer userId, String description, String url, String itemNameFromSite, String cost, List<Integer> costElementIndexes, List<PageParser.ElementEntry> costElementTagsAndClasses) {
+        super(id, name);
         this.userId = userId;
+        this.description = description;
+        this.url = url;
+        this.itemNameFromSite = itemNameFromSite;
+        this.cost = cost;
+        this.costElementIndexes = costElementIndexes;
+        this.costElementTagsAndClasses = costElementTagsAndClasses;
     }
 
     public Integer getUserId() {
@@ -81,5 +121,13 @@ public class Goods extends NamedEntity {
 
     public void setCostElementIndexes(List<Integer> costElementIndexes) {
         this.costElementIndexes = costElementIndexes;
+    }
+
+    public List<PageParser.ElementEntry> getCostElementTagsAndClasses() {
+        return costElementTagsAndClasses;
+    }
+
+    public void setCostElementTagsAndClasses(List<PageParser.ElementEntry> costElementTagsAndClasses) {
+        this.costElementTagsAndClasses = costElementTagsAndClasses;
     }
 }
