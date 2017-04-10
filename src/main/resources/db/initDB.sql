@@ -27,23 +27,23 @@ CREATE TABLE user_roles
 );
 CREATE TABLE goods
 (
-  id           INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  userId       INTEGER,
-  name         VARCHAR,
-  description  VARCHAR,
-  url          VARCHAR,
-  namefromsite VARCHAR,
-  cost         VARCHAR,
-  registered   TIMESTAMP           DEFAULT now(),
-  indexes      VARCHAR,
-  tags         VARCHAR,
-  FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
+  id                        INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  userid                    INTEGER,
+  name                      VARCHAR,
+  description               VARCHAR,
+  url                       VARCHAR,
+  itemnamefromsite          VARCHAR,
+  cost                      VARCHAR,
+  registered                TIMESTAMP           DEFAULT now(),
+  costelementindexes        VARCHAR,
+  costelementtagsandclasses VARCHAR,
+  FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE
 );
 CREATE TABLE costs
 (
   id       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  goodsId  INTEGER,
-  DateTime TIMESTAMP           DEFAULT now(),
+  goodsid  INTEGER,
+  datetime TIMESTAMP           DEFAULT now(),
   cost     INTEGER,
-  FOREIGN KEY (goodsId) REFERENCES goods (id) ON DELETE CASCADE
+  FOREIGN KEY (goodsid) REFERENCES goods (id) ON DELETE CASCADE
 );

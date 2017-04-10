@@ -22,12 +22,12 @@ public class PageParser {
             Element cost = getElementByText(doc, goods.getCost());
             if (cost != null) {
                 List<Integer> siblingIndexes = getSiblingIndexes(cost);
-                goods.setCostElementIndexes(siblingIndexes);
-                List<Goods.ElementEntry> tagsClasses = getTagsClasses(cost);
-                goods.setCostElementTagsAndClasses(tagsClasses);
+                goods.setCostElementIndexes(FormatConverter.getGson(siblingIndexes));
+                List<FormatConverter.ElementEntry> tagsClasses = getTagsClasses(cost);
+                goods.setCostElementTagsAndClasses(FormatConverter.getGson(tagsClasses));
                 String fileName = goods.getName() + "-" + goods.getDescription() + ".txt";
-                FileListConverter.saveToFile("index", fileName, siblingIndexes);
-                FileListConverter.saveToFile("tag", fileName, tagsClasses);
+                FormatConverter.saveToFile("index", fileName, siblingIndexes);
+                FormatConverter.saveToFile("tag", fileName, tagsClasses);
             }
             else System.out.println("*****************************************" +goods.getName() + " - " + goods.getDescription());
         } catch (IOException e) {
@@ -39,7 +39,7 @@ public class PageParser {
         try {
             Document doc = getDocument(goods.getUrl());
             Element element = doc;
-            List<Integer> elementIndexes = goods.getCostElementIndexes();
+            List<Integer> elementIndexes = FormatConverter.getFromGson(goods.getCostElementIndexes(), Integer.class);
             for (Integer elementIndex : elementIndexes) {
                 if (element.childNodeSize() < elementIndex.intValue()) {
                     break;
@@ -58,7 +58,7 @@ public class PageParser {
             Document doc = getDocument(goods.getUrl());
             List<Element> elements = new ArrayList<>();
             elements.add(doc);
-            List<Goods.ElementEntry> tags = goods.getCostElementTagsAndClasses();
+            List<FormatConverter.ElementEntry> tags = FormatConverter.getFromGson(goods.getCostElementTagsAndClasses(), FormatConverter.ElementEntry.class);
             Element cost = recursiveCostByTagClass(doc, tags);
             return cost != null ? cost.text() : "*********************************************************************";
         } catch (IOException e) {
@@ -67,12 +67,12 @@ public class PageParser {
         return "**********************************************************";
     }
 
-    private static Element recursiveCostByTagClass(Element element, List<Goods.ElementEntry> goods) {
+    private static Element recursiveCostByTagClass(Element element, List<FormatConverter.ElementEntry> goods) {
         if (goods.isEmpty()) {
             return element;
         }
         String tag = goods.get(0).getTag();
-        String clasz = goods.get(0).getClasz();
+        String clasz = goods.get(0).getClazz();
         List<Element> elements = element.getElementsByTag(tag)
                 .stream()
                 .filter(el -> el.className().equals(clasz))
@@ -103,12 +103,12 @@ public class PageParser {
         return optional.orElse(null);
     }
 
-    private static List<Goods.ElementEntry> getTagsClasses(Element element) {
-        List<Goods.ElementEntry> elementEntryList = element.parents().stream()
-                .map(el -> new Goods.ElementEntry(el.tagName(), el.className()))
+    private static List<FormatConverter.ElementEntry> getTagsClasses(Element element) {
+        List<FormatConverter.ElementEntry> elementEntryList = element.parents().stream()
+                .map(el -> new FormatConverter.ElementEntry(el.tagName(), el.className()))
                 .collect(Collectors.toList());
         Collections.reverse(elementEntryList);
-        elementEntryList.add(new Goods.ElementEntry(element.tagName(), element.className()));
+        elementEntryList.add(new FormatConverter.ElementEntry(element.tagName(), element.className()));
         return elementEntryList;
     }
 

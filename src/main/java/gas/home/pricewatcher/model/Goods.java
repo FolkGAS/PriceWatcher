@@ -1,10 +1,6 @@
 package gas.home.pricewatcher.model;
 
-import gas.home.pricewatcher.util.FileListConverter;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Goods extends NamedEntity {
 
@@ -18,9 +14,9 @@ public class Goods extends NamedEntity {
 
     private final LocalDateTime registered = LocalDateTime.now();
 
-    private List<Integer> costElementIndexes;
+    private String costElementIndexes;
 
-    private List<ElementEntry> costElementTagsAndClasses;
+    private String costElementTagsAndClasses;
 
     public Goods() {
     }
@@ -31,8 +27,8 @@ public class Goods extends NamedEntity {
                  String url,
                  String itemNameFromSite,
                  String cost,
-                 List<Integer> costElementIndexes,
-                 List<ElementEntry> costElementTagsAndClasses) {
+                 String costElementIndexes,
+                 String costElementTagsAndClasses) {
         super(id, name);
         this.description = description;
         this.url = url;
@@ -55,8 +51,8 @@ public class Goods extends NamedEntity {
                  String url,
                  String itemNameFromSite,
                  String cost,
-                 List<Integer> costElementIndexes,
-                 List<ElementEntry> costElementTagsAndClasses) {
+                 String costElementIndexes,
+                 String costElementTagsAndClasses) {
         this(null, name, description, url, itemNameFromSite, cost, costElementIndexes, costElementTagsAndClasses);
     }
 
@@ -96,22 +92,21 @@ public class Goods extends NamedEntity {
         return registered;
     }
 
-    public List<Integer> getCostElementIndexes() {
+    public String getCostElementIndexes() {
         return costElementIndexes;
     }
 
-    public void setCostElementIndexes(List<Integer> costElementIndexes) {
+    public void setCostElementIndexes(String costElementIndexes) {
         this.costElementIndexes = costElementIndexes;
     }
 
-    public List<ElementEntry> getCostElementTagsAndClasses() {
+    public String getCostElementTagsAndClasses() {
         return costElementTagsAndClasses;
     }
 
-    public void setCostElementTagsAndClasses(List<ElementEntry> costElementTagsAndClasses) {
+    public void setCostElementTagsAndClasses(String costElementTagsAndClasses) {
         this.costElementTagsAndClasses = costElementTagsAndClasses;
     }
-
 
     @Override
     public String toString() {
@@ -123,66 +118,8 @@ public class Goods extends NamedEntity {
                 ", itemNameFromSite='" + itemNameFromSite + '\'' +
                 ", cost='" + cost + '\'' +
                 ", registered=" + registered +
-                ", costElementIndexes=" + costElementIndexes +
-                ", costElementTagsAndClasses=" + costElementTagsAndClasses +
+                ", costElementIndexes='" + costElementIndexes + '\'' +
+                ", costElementTagsAndClasses='" + costElementTagsAndClasses + '\'' +
                 '}';
-    }
-
-    public static class ElementEntry implements Serializable {
-        private String tag;
-        private String clasz;
-
-        public ElementEntry() {
-        }
-
-        public ElementEntry(String gson) {
-            FileListConverter.getFromGson(gson,ElementEntry.class);
-        }
-
-        public ElementEntry(String tagName, String className) {
-            this.tag = tagName;
-            this.clasz = className;
-        }
-
-        public String getTag() {
-            return tag;
-        }
-
-        public void setTag(String tag) {
-            this.tag = tag;
-        }
-
-        public String getClasz() {
-            return clasz;
-        }
-
-        public void setClasz(String clasz) {
-            this.clasz = clasz;
-        }
-
-        @Override
-        public String toString() {
-            return "ElementEntry{" +
-                    "tag='" + tag + '\'' +
-                    ", clasz='" + clasz + '\'' +
-                    '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ElementEntry that = (ElementEntry) o;
-
-            return (tag != null ? tag.equals(that.tag) : that.tag == null) && (clasz != null ? clasz.equals(that.clasz) : that.clasz == null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = tag != null ? tag.hashCode() : 0;
-            result = 31 * result + (clasz != null ? clasz.hashCode() : 0);
-            return result;
-        }
     }
 }

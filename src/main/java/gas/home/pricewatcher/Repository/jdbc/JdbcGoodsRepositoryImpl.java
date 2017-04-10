@@ -2,7 +2,6 @@ package gas.home.pricewatcher.Repository.jdbc;
 
 import gas.home.pricewatcher.Repository.GoodsRepository;
 import gas.home.pricewatcher.model.Goods;
-import gas.home.pricewatcher.util.FileListConverter;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,11 +41,11 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
                 .addValue("name", goods.getName())
                 .addValue("description", goods.getDescription())
                 .addValue("url", goods.getUrl())
-                .addValue("namefromsite", goods.getItemNameFromSite())
+                .addValue("itemnamefromsite", goods.getItemNameFromSite())
                 .addValue("cost", goods.getCost())
                 .addValue("registered", goods.getRegistered())
-                .addValue("indexes", FileListConverter.getGson(goods.getCostElementIndexes()))
-                .addValue("tags", FileListConverter.getGson(goods.getCostElementTagsAndClasses()));
+                .addValue("costelementindexes", goods.getCostElementIndexes())
+                .addValue("costelementtagsandclasses", goods.getCostElementTagsAndClasses());
 
         if (goods.isNew()) {
             Number newKey = insertMeal.executeAndReturnKey(map);
@@ -58,11 +57,11 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
                             "name=:name, " +
                             "description=:description, " +
                             "url=:url, " +
-                            "itemNameFromSite=:namefromsite, " +
+                            "itemnamefromsite=:itemnamefromsite, " +
                             "cost=:cost, " +
                             "registered=:registered, " +
-                            "costElementIndexes=:indexes, " +
-                            "costElementTagsAndClasses=:tags " +
+                            "costelementindexes=:costelementindexes, " +
+                            "costelementtagsandclasses=:costelementtagsandclasses " +
                             "WHERE id=:id AND userid=:userid", map);
             if (update == 0) {
                 return null;
