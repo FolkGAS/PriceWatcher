@@ -2,6 +2,7 @@
 *.jar
 *.ear
 *.patch
+*.iml
 out/
 src/test/
 target/

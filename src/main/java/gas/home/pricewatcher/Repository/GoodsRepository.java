@@ -2,15 +2,18 @@ package gas.home.pricewatcher.Repository;
 
 import gas.home.pricewatcher.model.Goods;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface GoodsRepository {
 
-    Goods save(Goods goods);
+    Goods save(Goods goods, int userId);
 
-    Goods delete(int id);
+    boolean delete(int id, int userId);
 
-    Goods get(int id);
+    Goods get(int id, int userId);
 
-    List<Goods> getAll();
+    List<Goods> getAll(int userId);
+
+    List<Goods> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId);
 }

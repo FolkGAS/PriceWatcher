@@ -1,13 +1,12 @@
 package gas.home.pricewatcher.model;
 
-import gas.home.pricewatcher.util.PageParser;
+import gas.home.pricewatcher.util.FileListConverter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Goods extends NamedEntity {
-
-    private Integer userId;
 
     private String description;
 
@@ -21,19 +20,20 @@ public class Goods extends NamedEntity {
 
     private List<Integer> costElementIndexes;
 
-    private List<PageParser.ElementEntry> costElementTagsAndClasses;
+    private List<ElementEntry> costElementTagsAndClasses;
+
+    public Goods() {
+    }
 
     public Goods(Integer id,
-                 Integer userId,
                  String name,
                  String description,
                  String url,
                  String itemNameFromSite,
                  String cost,
                  List<Integer> costElementIndexes,
-                 List<PageParser.ElementEntry> costElementTagsAndClasses) {
+                 List<ElementEntry> costElementTagsAndClasses) {
         super(id, name);
-        this.userId = userId;
         this.description = description;
         this.url = url;
         this.itemNameFromSite = itemNameFromSite;
@@ -47,7 +47,7 @@ public class Goods extends NamedEntity {
                  String url,
                  String itemNameFromSite,
                  String cost) {
-        this(null, null, name, description, url, itemNameFromSite, cost, null, null);
+        this(null, name, description, url, itemNameFromSite, cost, null, null);
     }
 
     public Goods(String name,
@@ -56,27 +56,8 @@ public class Goods extends NamedEntity {
                  String itemNameFromSite,
                  String cost,
                  List<Integer> costElementIndexes,
-                 List<PageParser.ElementEntry> costElementTagsAndClasses) {
-        this(null, null, name, description, url, itemNameFromSite, cost, costElementIndexes, costElementTagsAndClasses);
-    }
-
-    public Goods(Integer id, String name, Integer userId, String description, String url, String itemNameFromSite, String cost, List<Integer> costElementIndexes, List<PageParser.ElementEntry> costElementTagsAndClasses) {
-        super(id, name);
-        this.userId = userId;
-        this.description = description;
-        this.url = url;
-        this.itemNameFromSite = itemNameFromSite;
-        this.cost = cost;
-        this.costElementIndexes = costElementIndexes;
-        this.costElementTagsAndClasses = costElementTagsAndClasses;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+                 List<ElementEntry> costElementTagsAndClasses) {
+        this(null, name, description, url, itemNameFromSite, cost, costElementIndexes, costElementTagsAndClasses);
     }
 
     public String getDescription() {
@@ -123,11 +104,85 @@ public class Goods extends NamedEntity {
         this.costElementIndexes = costElementIndexes;
     }
 
-    public List<PageParser.ElementEntry> getCostElementTagsAndClasses() {
+    public List<ElementEntry> getCostElementTagsAndClasses() {
         return costElementTagsAndClasses;
     }
 
-    public void setCostElementTagsAndClasses(List<PageParser.ElementEntry> costElementTagsAndClasses) {
+    public void setCostElementTagsAndClasses(List<ElementEntry> costElementTagsAndClasses) {
         this.costElementTagsAndClasses = costElementTagsAndClasses;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", itemNameFromSite='" + itemNameFromSite + '\'' +
+                ", cost='" + cost + '\'' +
+                ", registered=" + registered +
+                ", costElementIndexes=" + costElementIndexes +
+                ", costElementTagsAndClasses=" + costElementTagsAndClasses +
+                '}';
+    }
+
+    public static class ElementEntry implements Serializable {
+        private String tag;
+        private String clasz;
+
+        public ElementEntry() {
+        }
+
+        public ElementEntry(String gson) {
+            FileListConverter.getFromGson(gson,ElementEntry.class);
+        }
+
+        public ElementEntry(String tagName, String className) {
+            this.tag = tagName;
+            this.clasz = className;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+
+        public void setTag(String tag) {
+            this.tag = tag;
+        }
+
+        public String getClasz() {
+            return clasz;
+        }
+
+        public void setClasz(String clasz) {
+            this.clasz = clasz;
+        }
+
+        @Override
+        public String toString() {
+            return "ElementEntry{" +
+                    "tag='" + tag + '\'' +
+                    ", clasz='" + clasz + '\'' +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ElementEntry that = (ElementEntry) o;
+
+            return (tag != null ? tag.equals(that.tag) : that.tag == null) && (clasz != null ? clasz.equals(that.clasz) : that.clasz == null);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = tag != null ? tag.hashCode() : 0;
+            result = 31 * result + (clasz != null ? clasz.hashCode() : 0);
+            return result;
+        }
     }
 }

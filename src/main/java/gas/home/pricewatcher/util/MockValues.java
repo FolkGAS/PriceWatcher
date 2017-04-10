@@ -27,7 +27,7 @@ public class MockValues {
                     "Ситилинк",
                     "https://www.citilink.ru/catalog/computers_and_notebooks/hdd/hdd_in/318866/",
                     "Жесткий диск WD Blue WD20EZRZ, 2Тб, HDD, SATA III, 3.5\"",
-                    "4510",
+                    "4550",
                     null,
                     null),
 
@@ -75,7 +75,7 @@ public class MockValues {
                     "DNS",
                     "http://www.dns-shop.ru/product/72ed1bba84203361/2-tb-zestkij-disk-wd-blue-wd20ezrz/",
                     "2 ТБ Жесткий диск WD Blue [WD20EZRZ]",
-                    "4 650",
+                    "4 799",
                     null,
                     null),
 

@@ -1,0 +1,49 @@
+DROP TABLE IF EXISTS costs;
+DROP TABLE IF EXISTS goods;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS users;
+DROP SEQUENCE IF EXISTS global_seq;
+
+CREATE SEQUENCE global_seq START 100000;
+
+CREATE TABLE users
+(
+  id         INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  name       VARCHAR NOT NULL,
+  email      VARCHAR NOT NULL,
+  password   VARCHAR NOT NULL,
+  registered TIMESTAMP           DEFAULT now(),
+  enabled    BOOL                DEFAULT TRUE
+);
+CREATE UNIQUE INDEX users_unique_email_idx
+  ON users (email);
+
+CREATE TABLE user_roles
+(
+  user_id INTEGER NOT NULL,
+  role    VARCHAR,
+  CONSTRAINT user_roles_idx UNIQUE (user_id, role),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+CREATE TABLE goods
+(
+  id           INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  userId       INTEGER,
+  name         VARCHAR,
+  description  VARCHAR,
+  url          VARCHAR,
+  namefromsite VARCHAR,
+  cost         VARCHAR,
+  registered   TIMESTAMP           DEFAULT now(),
+  indexes      VARCHAR,
+  tags         VARCHAR,
+  FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
+);
+CREATE TABLE costs
+(
+  id       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  goodsId  INTEGER,
+  DateTime TIMESTAMP           DEFAULT now(),
+  cost     INTEGER,
+  FOREIGN KEY (goodsId) REFERENCES goods (id) ON DELETE CASCADE
+);
