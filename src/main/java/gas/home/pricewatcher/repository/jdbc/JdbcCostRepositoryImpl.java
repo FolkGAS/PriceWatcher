@@ -1,0 +1,82 @@
+package gas.home.pricewatcher.repository.jdbc;
+
+import gas.home.pricewatcher.repository.CostRepository;
+import gas.home.pricewatcher.model.Cost;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public class JdbcCostRepositoryImpl implements CostRepository {
+
+    private static final BeanPropertyRowMapper<Cost> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Cost.class);
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final SimpleJdbcInsert insertCost;
+
+    public JdbcCostRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.insertCost = new SimpleJdbcInsert(dataSource)
+                .withTableName("costs")
+                .usingGeneratedKeyColumns("id");
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    @Override
+    public Cost save(Cost cost, int goodsId) {
+        MapSqlParameterSource map = new MapSqlParameterSource()
+                .addValue("id", cost.getId())
+                .addValue("goodsid", goodsId)
+                .addValue("cost", cost.getCost())
+                .addValue("datetime", cost.getDateTime());
+
+        if (cost.isNew()) {
+            Number newKey = insertCost.executeAndReturnKey(map);
+            cost.setId(newKey.intValue());
+        } else {
+            int update = namedParameterJdbcTemplate.update(
+                    "UPDATE costs " +
+                            "SET id=:id, " +
+                            "goodsid=:goodsid, " +
+                            "cost=:cost " +
+                            "WHERE id=:id AND goodsid=:goodsid", map);
+            if (update == 0) {
+                return null;
+            }
+        }
+        return cost;
+    }
+
+    @Override
+    public boolean delete(int id, int goodsId) {
+        return jdbcTemplate.update("DELETE FROM costs WHERE id=? AND goodsid=?", id, goodsId) != 0;
+    }
+
+    @Override
+    public Cost get(int id, int goodsId) {
+        List<Cost> costs = jdbcTemplate.query("SELECT * FROM costs WHERE id=? AND goodsid=?", ROW_MAPPER, id, goodsId);
+        return costs.size() == 0 ? null : DataAccessUtils.singleResult(costs);
+    }
+
+    @Override
+    public List<Cost> getAll(int goodsId) {
+        return jdbcTemplate.query("SELECT * FROM costs WHERE goodsid=? ORDER BY datetime DESC, id DESC", ROW_MAPPER, goodsId);
+    }
+
+    @Override
+    public List<Cost> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, int goodsId) {
+        return jdbcTemplate.query("SELECT * FROM costs WHERE goodsid=? AND datetime BETWEEN ? AND ? ORDER BY datetime DESC, id DESC",
+                ROW_MAPPER, goodsId, startDateTime, endDateTime);
+    }
+}

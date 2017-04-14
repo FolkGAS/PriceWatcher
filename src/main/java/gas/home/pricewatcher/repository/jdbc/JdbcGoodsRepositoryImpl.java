@@ -1,6 +1,6 @@
-package gas.home.pricewatcher.Repository.jdbc;
+package gas.home.pricewatcher.repository.jdbc;
 
-import gas.home.pricewatcher.Repository.GoodsRepository;
+import gas.home.pricewatcher.repository.GoodsRepository;
 import gas.home.pricewatcher.model.Goods;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -43,7 +43,7 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
                 .addValue("url", goods.getUrl())
                 .addValue("itemnamefromsite", goods.getItemNameFromSite())
                 .addValue("cost", goods.getCost())
-                .addValue("registered", goods.getRegistered())
+                .addValue("datetime", goods.getDateTime())
                 .addValue("costelementindexes", goods.getCostElementIndexes())
                 .addValue("costelementtagsandclasses", goods.getCostElementTagsAndClasses());
 
@@ -59,7 +59,6 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
                             "url=:url, " +
                             "itemnamefromsite=:itemnamefromsite, " +
                             "cost=:cost, " +
-                            "registered=:registered, " +
                             "costelementindexes=:costelementindexes, " +
                             "costelementtagsandclasses=:costelementtagsandclasses " +
                             "WHERE id=:id AND userid=:userid", map);
@@ -83,13 +82,12 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
 
     @Override
     public List<Goods> getAll(int userId) {
-        List<Goods> query = jdbcTemplate.query("SELECT * FROM goods WHERE userid=? ORDER BY registered DESC, id DESC", ROW_MAPPER, userId);
-        return query;
+        return jdbcTemplate.query("SELECT * FROM goods WHERE userid=? ORDER BY datetime DESC, id DESC", ROW_MAPPER, userId);
     }
 
     @Override
     public List<Goods> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM goods WHERE userid=? AND registered BETWEEN ? AND ? ORDER BY registered DESC, ID DESC",
+        return jdbcTemplate.query("SELECT * FROM goods WHERE userid=? AND datetime BETWEEN ? AND ? ORDER BY datetime DESC, ID DESC",
                 ROW_MAPPER, userId, startDate, endDate);
     }
 }

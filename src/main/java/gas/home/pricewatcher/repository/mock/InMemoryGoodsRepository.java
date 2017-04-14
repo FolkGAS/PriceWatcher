@@ -1,6 +1,6 @@
-package gas.home.pricewatcher.Repository.mock;
+package gas.home.pricewatcher.repository.mock;
 
-import gas.home.pricewatcher.Repository.GoodsRepository;
+import gas.home.pricewatcher.repository.GoodsRepository;
 import gas.home.pricewatcher.model.Goods;
 import gas.home.pricewatcher.util.MockValues;
 
@@ -19,9 +19,7 @@ public class InMemoryGoodsRepository implements GoodsRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MockValues.goodsList.forEach(goods -> {
-            save(goods, 1);
-        });
+        MockValues.goodsList.forEach(goods -> save(goods, 1));
     }
 
     @Override
@@ -60,13 +58,13 @@ public class InMemoryGoodsRepository implements GoodsRepository {
         Objects.requireNonNull(startDateTime);
         Objects.requireNonNull(endDateTime);
         return getAllAsStream(userId)
-//                .filter(um -> DateTimeUtil.isBetween(um.getDateTime(), startDateTime, endDateTime))
+//                .filter()
                 .collect(Collectors.toList());
     }
 
     private Stream<Goods> getAllAsStream(int userId) {
         Map<Integer, Goods> meals = repository.get(userId);
         return meals == null ?
-                Stream.empty() : meals.values().stream().sorted(Comparator.comparing(Goods::getRegistered).thenComparing(Goods::getId).reversed());
+                Stream.empty() : meals.values().stream().sorted(Comparator.comparing(Goods::getDateTime).thenComparing(Goods::getId).reversed());
     }
 }

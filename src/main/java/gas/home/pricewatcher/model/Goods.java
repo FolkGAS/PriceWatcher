@@ -1,7 +1,5 @@
 package gas.home.pricewatcher.model;
 
-import java.time.LocalDateTime;
-
 public class Goods extends NamedEntity {
 
     private String description;
@@ -11,8 +9,6 @@ public class Goods extends NamedEntity {
     private String itemNameFromSite;
 
     private String cost;
-
-    private final LocalDateTime registered = LocalDateTime.now();
 
     private String costElementIndexes;
 
@@ -88,10 +84,6 @@ public class Goods extends NamedEntity {
         this.cost = cost;
     }
 
-    public LocalDateTime getRegistered() {
-        return registered;
-    }
-
     public String getCostElementIndexes() {
         return costElementIndexes;
     }
@@ -117,7 +109,7 @@ public class Goods extends NamedEntity {
                 ", url='" + url + '\'' +
                 ", itemNameFromSite='" + itemNameFromSite + '\'' +
                 ", cost='" + cost + '\'' +
-                ", registered=" + registered +
+                ", dateTime=" + dateTime +
                 ", costElementIndexes='" + costElementIndexes + '\'' +
                 ", costElementTagsAndClasses='" + costElementTagsAndClasses + '\'' +
                 '}';

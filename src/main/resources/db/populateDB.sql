@@ -4,13 +4,13 @@ DELETE FROM users;
 -- DELETE FROM costs;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
-INSERT INTO users (name, email, password, registered)
+INSERT INTO users (name, email, password, datetime)
 VALUES ('guest', 'juest@rambler.ru', '', '2017-04-01 10:20');
 
-INSERT INTO users (name, email, password, registered)
+INSERT INTO users (name, email, password, datetime)
 VALUES ('User', 'user@yandex.ru', 'password', '2017-04-02 15:15');
 
-INSERT INTO users (name, email, password, registered)
+INSERT INTO users (name, email, password, datetime)
 VALUES ('Admin', 'admin@gmail.com', 'admin', '2017-04-03 23:00');
 
 INSERT INTO user_roles (role, user_id) VALUES
@@ -18,7 +18,7 @@ INSERT INTO user_roles (role, user_id) VALUES
   ('ROLE_USER', 100001),
   ('ROLE_ADMIN', 100002);
 
-INSERT INTO goods (userid, name, description, url, itemnamefromsite, cost, registered, costelementindexes, costelementtagsandclasses)
+INSERT INTO goods (userid, name, description, url, itemnamefromsite, cost, datetime, costelementindexes, costelementtagsandclasses)
 VALUES
   ('100000',
    'HDD Seagate 2Tb',

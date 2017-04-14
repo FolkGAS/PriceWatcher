@@ -16,17 +16,21 @@ import java.util.List;
 
 public class FormatConverter {
 
+    private FormatConverter() {
+
+    }
+
     public static List<Integer> getIndexFromFile(Goods goods) {
         String fileName = goods.getName() + "-" + goods.getDescription() + ".txt";
         return loadFromFile("index", fileName, Integer.class);
     }
 
-    public static List<ElementEntry> getTagsFromFile(Goods goods) {
+    public static List<GenericPair<String, String>> getTagsFromFile(Goods goods) {
         String fileName = goods.getName() + "-" + goods.getDescription() + ".txt";
-        return loadFromFile("tag", fileName, ElementEntry.class);
+        return loadFromFile("tag", fileName, GenericPair.class);
     }
 
-    public static <T> void saveToFile(String parent, String fileName, List<T> list) {
+    private static <T> void saveToFile(String parent, String fileName, List<T> list) {
         try {
             Path parentDir = Paths.get(parent);
             if (!Files.exists(parentDir)) {
@@ -40,7 +44,7 @@ public class FormatConverter {
         stringToFile(gson, path);
     }
 
-    public static <T> List<T> loadFromFile(String parent, String fileName, Class clazz) {
+    private static <T> List<T> loadFromFile(String parent, String fileName, Class clazz) {
         Path path = Paths.get(parent + System.getProperty("file.separator") + "GSON-" + fileName);
         String gson = stringFromFile(path);
         List<T> fromGson = getFromGson(gson, clazz);
@@ -54,7 +58,7 @@ public class FormatConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "**************************************************************************";
+        return "\n**************************************************************************\n";
     }
 
     public static <T> List<T> getFromGson(String gson, Class clazz) {
@@ -65,21 +69,22 @@ public class FormatConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return Collections.emptyList();
     }
 
-    public static String stringFromFile(Path path) {
+    private static String stringFromFile(Path path) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             if (Files.exists(path) && Files.isRegularFile(path)) {
                 Files.copy(path, baos);
             } else {
-                return "**********************************************************************";
+                return "\n**********************************************************************\n";
             }
             return baos.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "********************************************************************************";
+        return "\n********************************************************************************\n";
     }
 
     private static boolean stringToFile(String s, Path path) {
@@ -92,52 +97,5 @@ public class FormatConverter {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public static class ElementEntry {
-        private String tag;
-        private String clazz;
-
-        public ElementEntry() {
-        }
-
-        public ElementEntry(String tag, String clazz) {
-            this.tag = tag;
-            this.clazz = clazz;
-        }
-
-        public String getTag() {
-            return tag;
-        }
-
-        public void setTag(String tag) {
-            this.tag = tag;
-        }
-
-        public String getClazz() {
-            return clazz;
-        }
-
-        public void setClazz(String clazz) {
-            this.clazz = clazz;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ElementEntry that = (ElementEntry) o;
-
-            if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
-            return clazz != null ? clazz.equals(that.clazz) : that.clazz == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = tag != null ? tag.hashCode() : 0;
-            result = 31 * result + (clazz != null ? clazz.hashCode() : 0);
-            return result;
-        }
     }
 }

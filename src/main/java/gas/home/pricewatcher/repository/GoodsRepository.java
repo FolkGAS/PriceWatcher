@@ -1,4 +1,4 @@
-package gas.home.pricewatcher.Repository;
+package gas.home.pricewatcher.repository;
 
 import gas.home.pricewatcher.model.Goods;
 

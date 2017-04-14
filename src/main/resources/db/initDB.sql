@@ -8,12 +8,12 @@ CREATE SEQUENCE global_seq START 100000;
 
 CREATE TABLE users
 (
-  id         INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  name       VARCHAR NOT NULL,
-  email      VARCHAR NOT NULL,
-  password   VARCHAR NOT NULL,
-  registered TIMESTAMP           DEFAULT now(),
-  enabled    BOOL                DEFAULT TRUE
+  id       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  name     VARCHAR NOT NULL,
+  email    VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  datetime TIMESTAMP           DEFAULT now(),
+  enabled  BOOL                DEFAULT TRUE
 );
 CREATE UNIQUE INDEX users_unique_email_idx
   ON users (email);
@@ -34,7 +34,7 @@ CREATE TABLE goods
   url                       VARCHAR,
   itemnamefromsite          VARCHAR,
   cost                      VARCHAR,
-  registered                TIMESTAMP           DEFAULT now(),
+  datetime                  TIMESTAMP           DEFAULT now(),
   costelementindexes        VARCHAR,
   costelementtagsandclasses VARCHAR,
   FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE
