@@ -1,15 +1,17 @@
 package gas.home.pricewatcher.repository.jdbc;
 
-import gas.home.pricewatcher.repository.UserRepository;
 import gas.home.pricewatcher.model.User;
+import gas.home.pricewatcher.repository.UserRepository;
+import gas.home.pricewatcher.repository.jdbc.rowmap.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
 
-    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+    private static final RowMapper<User> ROW_MAPPER = new UserRowMapper();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -42,7 +44,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 .addValue("name", user.getName())
                 .addValue("email", user.getEmail())
                 .addValue("password", user.getPassword())
-                .addValue("datetime", user.getDateTime())
+                .addValue("date_time", user.getDateTime())
                 .addValue("enabled", user.isEnabled());
 
         if (user.isNew()) {
@@ -85,7 +87,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE datetime BETWEEN ? AND ? ORDER BY datetime DESC, id DESC",
+        return jdbcTemplate.query("SELECT * FROM users WHERE date_time BETWEEN ? AND ? ORDER BY date_time DESC, id DESC",
                 ROW_MAPPER, startDateTime, endDateTime);
     }
 }

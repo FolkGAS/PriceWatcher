@@ -6,13 +6,13 @@ public class Goods extends NamedEntity {
 
     private String url;
 
-    private String itemNameFromSite;
+    private String inUrlName;
 
-    private String cost;
+    private String inUrlCost;
 
-    private String costElementIndexes;
+    private String routeByIndexes;
 
-    private String costElementTagsAndClasses;
+    private String routeByTags;
 
     public Goods() {
     }
@@ -21,35 +21,35 @@ public class Goods extends NamedEntity {
                  String name,
                  String description,
                  String url,
-                 String itemNameFromSite,
-                 String cost,
-                 String costElementIndexes,
-                 String costElementTagsAndClasses) {
+                 String inUrlName,
+                 String inUrlCost,
+                 String routeByIndexes,
+                 String routeByTags) {
         super(id, name);
         this.description = description;
         this.url = url;
-        this.itemNameFromSite = itemNameFromSite;
-        this.cost = cost;
-        this.costElementIndexes = costElementIndexes;
-        this.costElementTagsAndClasses = costElementTagsAndClasses;
+        this.inUrlName = inUrlName;
+        this.inUrlCost = inUrlCost;
+        this.routeByIndexes = routeByIndexes;
+        this.routeByTags = routeByTags;
     }
 
     public Goods(String name,
                  String description,
                  String url,
-                 String itemNameFromSite,
-                 String cost) {
-        this(null, name, description, url, itemNameFromSite, cost, null, null);
+                 String inUrlName,
+                 String inUrlCost) {
+        this(null, name, description, url, inUrlName, inUrlCost, null, null);
     }
 
     public Goods(String name,
                  String description,
                  String url,
-                 String itemNameFromSite,
-                 String cost,
-                 String costElementIndexes,
-                 String costElementTagsAndClasses) {
-        this(null, name, description, url, itemNameFromSite, cost, costElementIndexes, costElementTagsAndClasses);
+                 String inUrlName,
+                 String inUrlCost,
+                 String routeByIndexes,
+                 String routeByTags) {
+        this(null, name, description, url, inUrlName, inUrlCost, routeByIndexes, routeByTags);
     }
 
     public String getDescription() {
@@ -68,36 +68,36 @@ public class Goods extends NamedEntity {
         this.url = url;
     }
 
-    public String getItemNameFromSite() {
-        return itemNameFromSite;
+    public String getInUrlName() {
+        return inUrlName;
     }
 
-    public void setItemNameFromSite(String itemNameFromSite) {
-        this.itemNameFromSite = itemNameFromSite;
+    public void setInUrlName(String inUrlName) {
+        this.inUrlName = inUrlName;
     }
 
-    public String getCost() {
-        return cost;
+    public String getInUrlCost() {
+        return inUrlCost;
     }
 
-    public void setCost(String cost) {
-        this.cost = cost;
+    public void setInUrlCost(String inUrlCost) {
+        this.inUrlCost = inUrlCost;
     }
 
-    public String getCostElementIndexes() {
-        return costElementIndexes;
+    public String getRouteByIndexes() {
+        return routeByIndexes;
     }
 
-    public void setCostElementIndexes(String costElementIndexes) {
-        this.costElementIndexes = costElementIndexes;
+    public void setRouteByIndexes(String routeByIndexes) {
+        this.routeByIndexes = routeByIndexes;
     }
 
-    public String getCostElementTagsAndClasses() {
-        return costElementTagsAndClasses;
+    public String getRouteByTags() {
+        return routeByTags;
     }
 
-    public void setCostElementTagsAndClasses(String costElementTagsAndClasses) {
-        this.costElementTagsAndClasses = costElementTagsAndClasses;
+    public void setRouteByTags(String routeByTags) {
+        this.routeByTags = routeByTags;
     }
 
     @Override
@@ -107,11 +107,11 @@ public class Goods extends NamedEntity {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", url='" + url + '\'' +
-                ", itemNameFromSite='" + itemNameFromSite + '\'' +
-                ", cost='" + cost + '\'' +
+                ", inUrlName='" + inUrlName + '\'' +
+                ", inUrlCost='" + inUrlCost + '\'' +
                 ", dateTime=" + dateTime +
-                ", costElementIndexes='" + costElementIndexes + '\'' +
-                ", costElementTagsAndClasses='" + costElementTagsAndClasses + '\'' +
+                ", routeByIndexes='" + routeByIndexes + '\'' +
+                ", routeByTags='" + routeByTags + '\'' +
                 '}';
     }
 }

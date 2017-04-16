@@ -4,13 +4,13 @@ DELETE FROM users;
 -- DELETE FROM costs;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
-INSERT INTO users (name, email, password, datetime)
+INSERT INTO users (name, email, password, date_time)
 VALUES ('guest', 'juest@rambler.ru', '', '2017-04-01 10:20');
 
-INSERT INTO users (name, email, password, datetime)
+INSERT INTO users (name, email, password, date_time)
 VALUES ('User', 'user@yandex.ru', 'password', '2017-04-02 15:15');
 
-INSERT INTO users (name, email, password, datetime)
+INSERT INTO users (name, email, password, date_time)
 VALUES ('Admin', 'admin@gmail.com', 'admin', '2017-04-03 23:00');
 
 INSERT INTO user_roles (role, user_id) VALUES
@@ -18,7 +18,7 @@ INSERT INTO user_roles (role, user_id) VALUES
   ('ROLE_USER', 100001),
   ('ROLE_ADMIN', 100002);
 
-INSERT INTO goods (userid, name, description, url, itemnamefromsite, cost, datetime, costelementindexes, costelementtagsandclasses)
+INSERT INTO goods (user_id, name, description, url, in_url_name, in_url_cost, date_time, route_indexes, route_tags)
 VALUES
   ('100000',
    'HDD Seagate 2Tb',
@@ -118,7 +118,7 @@ VALUES
    '[0,1,0,0,2,0,1,0,1,1,7,0,1,0,1]',
    '[{"tag":"html","clazz":"no-js"},{"tag":"body","clazz":"productDetails no-inner-shaddow"},{"tag":"div","clazz":"wrapper"},{"tag":"div","clazz":"page-content"},{"tag":"div","clazz":"main-holder sel-main-holder"},{"tag":"div","clazz":"content-top-section sel-pdp-container"},{"tag":"div","clazz":"section"},{"tag":"div","clazz":"content-top-section-layout"},{"tag":"div","clazz":"content-top-secondary-section"},{"tag":"div","clazz":"pdp-summary-wrapper"},{"tag":"div","clazz":"content-frame product-details-summary-box"},{"tag":"div","clazz":"product-details-summary-price-holder"},{"tag":"div","clazz":"product-details-summary-prices"},{"tag":"div","clazz":"product-price pricing-product-detail"},{"tag":"strong","clazz":"product-price-current sel-product-tile-price"}]');
 
-INSERT INTO costs (goodsid, datetime, cost) VALUES
+INSERT INTO costs (goods_id, date_time, in_url_cost) VALUES
  (100003, '2017-04-01 20:00:00', 4599),
  (100003, '2017-04-02 21:00:00', 4699),
  (100003, '2017-04-03 22:00:00', 4499),

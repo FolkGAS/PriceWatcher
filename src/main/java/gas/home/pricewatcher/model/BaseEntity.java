@@ -3,14 +3,14 @@ package gas.home.pricewatcher.model;
 import java.time.LocalDateTime;
 
 public class BaseEntity {
-    protected Integer id;
+    Integer id;
 
-    protected final LocalDateTime dateTime = LocalDateTime.now();
+    LocalDateTime dateTime = LocalDateTime.now();
 
-    public BaseEntity() {
+    BaseEntity() {
     }
 
-    protected BaseEntity(Integer id) {
+    BaseEntity(Integer id) {
         this.id = id;
     }
 
@@ -24,6 +24,10 @@ public class BaseEntity {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public boolean isNew() {

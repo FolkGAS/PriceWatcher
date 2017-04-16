@@ -8,12 +8,12 @@ CREATE SEQUENCE global_seq START 100000;
 
 CREATE TABLE users
 (
-  id       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  name     VARCHAR NOT NULL,
-  email    VARCHAR NOT NULL,
-  password VARCHAR NOT NULL,
-  datetime TIMESTAMP           DEFAULT now(),
-  enabled  BOOL                DEFAULT TRUE
+  id        INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  name      VARCHAR NOT NULL,
+  email     VARCHAR NOT NULL,
+  password  VARCHAR NOT NULL,
+  date_time TIMESTAMP           DEFAULT now(),
+  enabled   BOOL                DEFAULT TRUE
 );
 CREATE UNIQUE INDEX users_unique_email_idx
   ON users (email);
@@ -27,23 +27,23 @@ CREATE TABLE user_roles
 );
 CREATE TABLE goods
 (
-  id                        INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  userid                    INTEGER,
-  name                      VARCHAR,
-  description               VARCHAR,
-  url                       VARCHAR,
-  itemnamefromsite          VARCHAR,
-  cost                      VARCHAR,
-  datetime                  TIMESTAMP           DEFAULT now(),
-  costelementindexes        VARCHAR,
-  costelementtagsandclasses VARCHAR,
-  FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE
+  id            INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  user_id       INTEGER,
+  name          VARCHAR,
+  description   VARCHAR,
+  url           VARCHAR,
+  in_url_name   VARCHAR,
+  in_url_cost   VARCHAR,
+  date_time     TIMESTAMP           DEFAULT now(),
+  route_indexes VARCHAR,
+  route_tags    VARCHAR,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 CREATE TABLE costs
 (
-  id       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-  goodsid  INTEGER,
-  datetime TIMESTAMP           DEFAULT now(),
-  cost     INTEGER,
-  FOREIGN KEY (goodsid) REFERENCES goods (id) ON DELETE CASCADE
+  id        INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+  goods_id  INTEGER,
+  date_time TIMESTAMP           DEFAULT now(),
+  cost      INTEGER,
+  FOREIGN KEY (goods_id) REFERENCES goods (id) ON DELETE CASCADE
 );

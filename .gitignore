@@ -4,7 +4,6 @@
 *.patch
 *.iml
 out/
-src/test/
 target/
 .idea/
 tag/

@@ -24,14 +24,24 @@ public class PageParser {
     public static void fillGoodsRoute(Goods goods) {
         try {
             Document doc = getDocument(goods.getUrl());
-            Element cost = getElementByText(doc, goods.getCost());
+//            FormatConverter.stringToFile(doc.toString(), Paths.get(goods.getId().toString() + ".html"));
+            Element cost = getElementByText(doc, goods.getInUrlCost());
+            if (cost == null) {
+                cost = getElementByText(doc, goods.getInUrlCost().replaceAll("[^\\d, ^\\s]", "").trim());
+            }
+            if (cost == null) {
+                cost = getElementByText(doc, FormatConverter.getDigital(goods.getInUrlCost()));
+            }
             if (cost != null) {
+                if (!goods.getInUrlCost().equals(cost.text())) {
+                    goods.setInUrlCost(cost.text());
+                }
                 List<Integer> siblingIndexes = getSiblingIndexes(cost);
-                goods.setCostElementIndexes(FormatConverter.getGson(siblingIndexes));
+                goods.setRouteByIndexes(FormatConverter.getGson(siblingIndexes));
                 List<GenericPair<String, String>> tagsClasses = getTagsClasses(cost);
-                goods.setCostElementTagsAndClasses(FormatConverter.getGson(tagsClasses));
+                goods.setRouteByTags(FormatConverter.getGson(tagsClasses));
             } else
-                System.out.println("\n*****************************************\n" + goods.getName() + " - " + goods.getDescription());
+                System.out.println("\n****ERROR getElementByText****\n" + goods.getName() + " - " + goods.getDescription() + " - " + goods.getInUrlCost());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +50,7 @@ public class PageParser {
     public static String getCostByIndexChain(Goods goods) {
         try {
             Node node = getDocument(goods.getUrl());
-            List<Integer> elementIndexes = FormatConverter.getFromGson(goods.getCostElementIndexes(), Integer.class);
+            List<Integer> elementIndexes = FormatConverter.getFromGson(goods.getRouteByIndexes(), Integer.class);
             for (Integer elementIndex : elementIndexes) {
                 if (node.childNodes().size() <= elementIndex) {
                     return "\n***************************************************************\n";
@@ -59,7 +69,7 @@ public class PageParser {
             Document doc = getDocument(goods.getUrl());
             List<Element> elements = new ArrayList<>();
             elements.add(doc);
-            List<GenericPair<String, String>> tags = FormatConverter.getFromGson(goods.getCostElementTagsAndClasses(), GenericPair.class);
+            List<GenericPair<String, String>> tags = FormatConverter.getFromGson(goods.getRouteByTags(), GenericPair.class);
             Element cost = recursiveCostByTagClass(doc, tags);
             return cost != null ? cost.text() : "\n*********************************************************************\n";
         } catch (IOException e) {

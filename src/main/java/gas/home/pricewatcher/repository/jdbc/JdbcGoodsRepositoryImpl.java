@@ -1,10 +1,11 @@
 package gas.home.pricewatcher.repository.jdbc;
 
-import gas.home.pricewatcher.repository.GoodsRepository;
 import gas.home.pricewatcher.model.Goods;
+import gas.home.pricewatcher.repository.GoodsRepository;
+import gas.home.pricewatcher.repository.jdbc.rowmap.GoodsRowMapper;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,7 +18,7 @@ import java.util.List;
 @Repository
 public class JdbcGoodsRepositoryImpl implements GoodsRepository {
 
-    private static final BeanPropertyRowMapper<Goods> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Goods.class);
+    private static final RowMapper<Goods> ROW_MAPPER = new GoodsRowMapper();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -37,15 +38,15 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
     public Goods save(Goods goods, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", goods.getId())
-                .addValue("userid", userId)
+                .addValue("user_id", userId)
                 .addValue("name", goods.getName())
                 .addValue("description", goods.getDescription())
                 .addValue("url", goods.getUrl())
-                .addValue("itemnamefromsite", goods.getItemNameFromSite())
-                .addValue("cost", goods.getCost())
-                .addValue("datetime", goods.getDateTime())
-                .addValue("costelementindexes", goods.getCostElementIndexes())
-                .addValue("costelementtagsandclasses", goods.getCostElementTagsAndClasses());
+                .addValue("in_url_name", goods.getInUrlName())
+                .addValue("in_url_cost", goods.getInUrlCost())
+                .addValue("date_time", goods.getDateTime())
+                .addValue("route_indexes", goods.getRouteByIndexes())
+                .addValue("route_tags", goods.getRouteByTags());
 
         if (goods.isNew()) {
             Number newKey = insertMeal.executeAndReturnKey(map);
@@ -57,11 +58,11 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
                             "name=:name, " +
                             "description=:description, " +
                             "url=:url, " +
-                            "itemnamefromsite=:itemnamefromsite, " +
-                            "cost=:cost, " +
-                            "costelementindexes=:costelementindexes, " +
-                            "costelementtagsandclasses=:costelementtagsandclasses " +
-                            "WHERE id=:id AND userid=:userid", map);
+                            "in_url_name=:in_url_name, " +
+                            "in_url_cost=:in_url_cost, " +
+                            "route_indexes=:route_indexes, " +
+                            "route_tags=:route_tags " +
+                            "WHERE id=:id AND user_id=:user_id", map);
             if (update == 0) {
                 return null;
             }
@@ -71,23 +72,23 @@ public class JdbcGoodsRepositoryImpl implements GoodsRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        return jdbcTemplate.update("DELETE FROM goods WHERE id=? AND userid=?", id, userId) != 0;
+        return jdbcTemplate.update("DELETE FROM goods WHERE id=? AND user_id=?", id, userId) != 0;
     }
 
     @Override
     public Goods get(int id, int userId) {
-        List<Goods> goodsList = jdbcTemplate.query("SELECT * FROM goods WHERE id=? AND userid=?", ROW_MAPPER, id, userId);
+        List<Goods> goodsList = jdbcTemplate.query("SELECT * FROM goods WHERE id=? AND user_id=?", ROW_MAPPER, id, userId);
         return goodsList.size() == 0 ? null : DataAccessUtils.singleResult(goodsList);
     }
 
     @Override
     public List<Goods> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM goods WHERE userid=? ORDER BY datetime DESC, id DESC", ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT * FROM goods WHERE user_id=? ORDER BY date_time DESC, id DESC", ROW_MAPPER, userId);
     }
 
     @Override
     public List<Goods> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM goods WHERE userid=? AND datetime BETWEEN ? AND ? ORDER BY datetime DESC, ID DESC",
+        return jdbcTemplate.query("SELECT * FROM goods WHERE user_id=? AND date_time BETWEEN ? AND ? ORDER BY date_time DESC, ID DESC",
                 ROW_MAPPER, userId, startDate, endDate);
     }
 }
