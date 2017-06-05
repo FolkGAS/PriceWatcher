@@ -27,10 +27,13 @@ public class Main {
         List<Goods> goodsList = goodsRepository.getAll(100000);
         goodsList.stream().skip(0).forEach(goods -> {
             System.out.print(".");
-            String cost = goods.getInUrlCost();
-            if (goods.getRouteByIndexes() == null || goods.getRouteByTags() == null) {
+            String cost = goods.getInUrlCost().trim();
+            if (goods.getRouteByIndexes() == null ||
+                    goods.getRouteByIndexes().length() == 0 ||
+                    goods.getRouteByTags() == null ||
+                    goods.getRouteByTags().length() == 0) {
                 saveNewGoods(goods);
-                addToCostTable(goods.getId(), goods.getInUrlCost());
+                addToCostTable(goods.getId(), goods.getInUrlCost().trim());
             }
 
             if (goods.getRouteByIndexes() != null || goods.getRouteByTags() != null) {

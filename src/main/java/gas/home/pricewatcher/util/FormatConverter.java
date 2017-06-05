@@ -42,7 +42,8 @@ public class FormatConverter {
             return "";
         }
         Pattern pat= Pattern.compile("[0-9]+(.[0-9]+)?");
-        Matcher matcher=pat.matcher(cost.replace(" ", ""));
+
+        Matcher matcher=pat.matcher(cost.replace(" ", "").replace("\u00a0", ""));
         if (matcher.find()) {
             return matcher.group();
         }

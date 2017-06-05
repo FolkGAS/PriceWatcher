@@ -25,15 +25,20 @@ public class PageParser {
         try {
             Document doc = getDocument(goods.getUrl());
 //            FormatConverter.stringToFile(doc.toString(), Paths.get(goods.getId().toString() + ".html"));
-            Element cost = getElementByText(doc, goods.getInUrlCost());
+            String inUrlCost = goods.getInUrlCost();
+            Element cost = getElementByText(doc, inUrlCost);
             if (cost == null) {
-                cost = getElementByText(doc, goods.getInUrlCost().replaceAll("[^\\d, ^\\s]", "").trim());
+                inUrlCost = inUrlCost.trim();
+                cost = getElementByText(doc, inUrlCost.replaceAll("[^\\d, ^\\s]", "").trim());
             }
             if (cost == null) {
-                cost = getElementByText(doc, FormatConverter.getDigital(goods.getInUrlCost()));
+                cost = getElementByText(doc, inUrlCost.replaceAll(" ", "\u00a0"));
+            }
+            if (cost == null) {
+                cost = getElementByText(doc, FormatConverter.getDigital(inUrlCost));
             }
             if (cost != null) {
-                if (!goods.getInUrlCost().equals(cost.text())) {
+                if (!inUrlCost.equals(cost.text())) {
                     goods.setInUrlCost(cost.text());
                 }
                 List<Integer> siblingIndexes = getSiblingIndexes(cost);
@@ -109,7 +114,7 @@ public class PageParser {
     private static Element getElementByText(Element element, String text) {
         Optional<Element> optional = element.getElementsContainingOwnText(text)
                 .stream()
-                .filter(el -> el.text().equals(text))
+                .filter(el -> el.text().contains(text))
                 .findFirst();
         return optional.orElse(null);
     }
